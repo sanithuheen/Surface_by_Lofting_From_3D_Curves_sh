@@ -9,18 +9,24 @@
 %                   (2) https://github.com/C-H-Chien/Third-Order-Edge-Detector
 
 % mfiledir = fileparts(mfilename('fullpath'));
-Dataset_Path = '/media/chchien/843557f5-9293-49aa-8fb8-c1fc6c72f7ea/home/chchien/datasets/ABC-NEF/00000162/train_img/';
-postfix = '.png';
-All_Images = dir(strcat(Dataset_Path, '*', postfix));
+Dataset_Path = '/media/chchien/843557f5-9293-49aa-8fb8-c1fc6c72f7ea/home/chchien/datasets/';
+Dataset_Name = 'DTU/';      %> ABC-NEF, DTU
+Scene_Name = 'scan105/';          %> 00009779
+Image_Folder_Name = 'color/';   %> train_img, color
+postfix = '.png';               %> .png for ABC-NEF, .jpg for Replica
+All_Images = dir(strcat(Dataset_Path, Dataset_Name, Scene_Name, Image_Folder_Name, '*', postfix));
+Full_Accessible_Path = [Dataset_Path, Dataset_Name, Scene_Name, Image_Folder_Name];
+
+% /media/chchien/843557f5-9293-49aa-8fb8-c1fc6c72f7ea/home/chchien/datasets/Replica/color
 
 %> Settings for the Third-Order Edge Detector
-thresh = 1;
+thresh = 8;
 sigma = 1;
 n = 1;
 format long;
 
 for i = 1:size(All_Images, 1)
-    src_Data_Path = strcat(Dataset_Path, All_Images(i).name);
+    src_Data_Path = strcat(Dataset_Path, Dataset_Name, Scene_Name, Image_Folder_Name, All_Images(i).name);
     img_ = imread(src_Data_Path);
     img_ = double(rgb2gray(img_));
     [TO_edges, ~, ~, ~] = third_order_edge_detector(img_, sigma, n, thresh, 1);
@@ -30,27 +36,39 @@ for i = 1:size(All_Images, 1)
     % TO_edges = [Subpixel_X Subpixel_Y Orientation Confidence]
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     TO_Edges_Name = extractBefore(All_Images(i).name, postfix);
+    yy = find(TO_edges(:,1) < 10 | TO_edges(:,2) > size(img_,1)-10 | TO_edges(:,2) < 10 | TO_edges(:,1) > size(img_,2)-10);
+    TO_edges(yy,:) = [];
 
     %> Save as .edg file
-    save_edg([Dataset_Path, TO_Edges_Name, '.edg'], TO_edges, [size(img_, 1), size(img_, 2)]);
+    % save_edg([Full_Accessible_Path, TO_Edges_Name, '.edg'], TO_edges, [size(img_, 1), size(img_, 2)]);
 
     %> Save as .txt file
-    img_index               = extractBefore(string(All_Images(i).name), "_");
-    output_edges_file_txt   = strcat("Edge_", img_index, "_t", string(thresh), ".txt");
-    output_file_path        = fullfile(Dataset_Path, output_edges_file_txt);
-    writematrix(TO_edges, output_file_path, 'Delimiter', 'tab');
+    % img_index               = extractBefore(string(All_Images(i).name), "_");
+    % output_edges_file_txt   = strcat("Edge_", img_index, "_t", string(thresh), ".txt");
+    % output_file_path        = fullfile(Dataset_Path, Dataset_Name, Scene_Name, Image_Folder_Name, output_edges_file_txt);
+    % writematrix(TO_edges, output_file_path, 'Delimiter', 'tab');
     
     %> Monitor the progress
     fprintf(". ");
+
+    % figure(1);
+    % src_Data_Path = strcat(Full_Accessible_Path, All_Images(i).name);   %> 01.jpg
+    % img_ = imread(src_Data_Path);
+    % img_ = double(rgb2gray(img_));
+    % imshow(uint8(img_)); hold on;
+    % plot(TO_edges(:,1), TO_edges(:,2), 'c.');
+
 end
 fprintf("\n");
 
 %% 
 %> An Example of super-imposing third-order edges on an image
 figure;
-src_Data_Path = strcat(Dataset_Path, All_Images(1).name);   %> 01.jpg
+src_Data_Path = strcat(Full_Accessible_Path, All_Images(2).name);   %> 01.jpg
 img_ = imread(src_Data_Path);
 img_ = double(rgb2gray(img_));
-[TO_edges, ~, ~, ~] = third_order_edge_detector(img_, sigma, n, thresh, 1);
-imshow(uint8(img_)); hold on;
-plot(TO_edges(:,1), TO_edges(:,2), 'c.');
+[TO_edges, ~, ~, ~] = third_order_edge_detector(img_, sigma, n, 8, 1);
+% imshow(uint8(img_)); hold on;
+canvas = zeros(size(img_));
+imshow(uint8(canvas)); hold on;
+plot(TO_edges(:,1), TO_edges(:,2), 'c.', 'MarkerSize', 2);
