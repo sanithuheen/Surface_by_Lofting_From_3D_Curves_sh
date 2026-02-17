@@ -12,14 +12,23 @@ This is Brown University LEMS lab internal collaborative research project which 
 	├── 00.projmatrix ... 49.projmatrix
 	└── curve_graph_00000325.mat     this file will be made in the following steps
   └──any other files relating to object 325 within the downloaded folders
+  
 - Creating curve_graph_00000325.mat:
+- 
     Open get_ABC_NEF_gt_curve_points.py and change , at arounf line 90 the root_dir and base_dir accordingly:
+  
       root_dir = r"{your path}\Surface_by_Lofting_From_3D_Curves\tools"
+  
       base_dir = r"{your path}\ABC_NEF_obj"
+
       Near line 100 set desired_obj = "00000325".
+  
       Replace the line plt.axis([range_size[0],range_size[1],range_size[0],range_size[1]])
+  
         with the two lines : ax.set_xlim(range_size[0], range_size[1])
+  
                               ax.set_ylim(range_size[0], range_size[1])
+  
     Open main.m and update the fol;lowing lines:
         media_storage = ""; dataset_name = ""; dataset_path = ""; object_tag = "00000325"; save_curve_mat_file = 1;
         ymlPath = fullfile("{your path}\Surface_by_Lofting_From_3D_Curves\data","00000325_3062bccff48e47a2b9de05e3_features_020.yml"); [!!Ensure you have the necessary .ymlfile]
