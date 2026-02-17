@@ -30,27 +30,47 @@ This is Brown University LEMS lab internal collaborative research project which 
                               ax.set_ylim(range_size[0], range_size[1])
   
     Open main.m and update the fol;lowing lines:
+  
         media_storage = ""; dataset_name = ""; dataset_path = ""; object_tag = "00000325"; save_curve_mat_file = 1;
+  
         ymlPath = fullfile("{your path}\Surface_by_Lofting_From_3D_Curves\data","00000325_3062bccff48e47a2b9de05e3_features_020.yml"); [!!Ensure you have the necessary .ymlfile]
+  
         at the bottom update this line:
+  
                 complete_curve_graph = final_curves;
+  
                 save(fullfile("{your path}\Surface_by_Lofting_From_3D_Curves\data", "curve_graph_00000325.mat"), "complete_curve_graph");
+  
     Open Matlab and cd into Surface_by_Lofting_From_3D_Curves and run "tools/curve_sampling/main" OR download Matlab extension on VScode and press the run triangle button at the top while main.m is open
 
 - PATH changes
+
       Occlusion_consistency_check: within lines 30-55 replace all 4 instances of "Amsterdam" data with the following lines:
+  
             fname1 = fullfile(pwd, 'data','object_00000325', sprintf("%02d.projmatrix", view-1));                  for projection matrices
+  
                     NOTE: there are 2 lines on projection Matrices, replace both
+  
             fname2 = fullfile(pwd, 'data', 'object_00000325', 'images', 'edges', sprintf("%02d.mat", view-1));     for edges
+  
             fname3 = fullfile(pwd, 'data', 'object_00000325', 'images', sprintf( "%02d.png", view-1));             change to png as data is png not jpeg
+  
       PreProcessed_3D_Curves_main: update the line: input_curves = load(fullfile(pwd, 'data', 'curve_graph_00000325.mat')).complete_curve_graph;
+  
 -In matlab run main.m. curve_graph_00000325.mat  should be made now!
+
 -In order to prevent errors from proximity pairing and lofting when attempting to run the repository make the following changes:
+
             in PreProcessed_3D_Curves_main : PARAMS.TAU_NUM_OF_PTS = 50;
+  
             in PreProcessed_3D_Curves_main : PARAMS.BREAK = 0;
+  
             in proximity_pairing : PARAMS.TAU_ALPHA = [5 150];
+  
 -In Matlab cd to Surface_by_Lofting_From_3D_Curves and type run in the command window
+
 -Ensure blender\output in Surface_by_Lofting_From_3D_Curves has the .ply files
+
 -Open blender and import these standford ply files to view
             
 
