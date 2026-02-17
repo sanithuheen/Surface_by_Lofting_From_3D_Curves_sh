@@ -6,11 +6,17 @@ This is Brown University LEMS lab internal collaborative research project which 
 - After cloning the repo, create a folder called data.
 - Build the following file heiracy usnig the data from the data folders downloaded previously:
 - data/
+- 
 └── object_00000325/
+
 	├── images/           (00.jpg ... 49.jpg)   (take the images from the traini_img folder)
+
 	├── edges/            (00.mat ... 49.mat with TO_edges) (folder with all the edges)
+
 	├── 00.projmatrix ... 49.projmatrix
+
 	└── curve_graph_00000325.mat     this file will be made in the following steps
+
   └──any other files relating to object 325 within the downloaded folders
   
 - Creating curve_graph_00000325.mat:
